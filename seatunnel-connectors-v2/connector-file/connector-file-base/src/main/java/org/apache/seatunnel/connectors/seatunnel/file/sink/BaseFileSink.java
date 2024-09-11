@@ -45,7 +45,7 @@ import java.util.Optional;
 
 public abstract class BaseFileSink
         implements SeaTunnelSink<
-                SeaTunnelRow, FileSinkState, FileCommitInfo, FileAggregatedCommitInfo> {
+        SeaTunnelRow, FileSinkState, FileCommitInfo, FileAggregatedCommitInfo> {
     protected SeaTunnelRowType seaTunnelRowType;
     protected Config pluginConfig;
     protected HadoopConf hadoopConf;
@@ -64,9 +64,16 @@ public abstract class BaseFileSink
     @Override
     public void setTypeInfo(SeaTunnelRowType seaTunnelRowType) {
         this.seaTunnelRowType = seaTunnelRowType;
+        /**
+         * File Sink 配置信息
+         */
         this.fileSinkConfig = new FileSinkConfig(pluginConfig, seaTunnelRowType);
+        /**
+         * 写策略 比如 CSV、TEXT、JSON PARQUET 等
+         */
         this.writeStrategy =
                 WriteStrategyFactory.of(fileSinkConfig.getFileFormat(), fileSinkConfig);
+
         this.fileSystemUtils = new FileSystemUtils(hadoopConf);
         this.writeStrategy.setSeaTunnelRowTypeInfo(seaTunnelRowType);
         this.writeStrategy.setFileSystemUtils(fileSystemUtils);
@@ -85,7 +92,7 @@ public abstract class BaseFileSink
 
     @Override
     public Optional<SinkAggregatedCommitter<FileCommitInfo, FileAggregatedCommitInfo>>
-            createAggregatedCommitter() throws IOException {
+    createAggregatedCommitter() throws IOException {
         return Optional.of(new FileSinkAggregatedCommitter(fileSystemUtils));
     }
 
@@ -115,7 +122,7 @@ public abstract class BaseFileSink
      *
      * @param pluginConfig plugin config.
      * @throws PrepareFailException if plugin prepare failed, the {@link PrepareFailException} will
-     *     throw.
+     *                              throw.
      */
     @Override
     public void prepare(Config pluginConfig) throws PrepareFailException {

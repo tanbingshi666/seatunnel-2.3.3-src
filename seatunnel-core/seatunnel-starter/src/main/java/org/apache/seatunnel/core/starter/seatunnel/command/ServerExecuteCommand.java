@@ -40,9 +40,9 @@ public class ServerExecuteCommand implements Command<ServerCommandArgs> {
 
     @Override
     public void execute() {
-        // 1 加载 seatunnel.yaml 和 hazelcast.yaml 配置文件
-        // seatunnel.yaml 负责 seatunnel-engine 配置
-        // hazelcast.yaml 负责 hazelcast-imdg 配置
+        // 1 加载 seatunnel.yaml 和 hazelcast.yaml 配置文件 统一封装为 SeaTunnelConfig 对象
+        // seatunnel.yaml 负责 seatunnel-engine 配置 统一封装为 EngineConfig 对象
+        // hazelcast.yaml 负责 hazelcast-imdg 配置 统一封装为 Config
         SeaTunnelConfig seaTunnelConfig = ConfigProvider.locateAndGetSeaTunnelConfig();
 
         // 2 是否在命令参数执行 --cluster xxx 参数

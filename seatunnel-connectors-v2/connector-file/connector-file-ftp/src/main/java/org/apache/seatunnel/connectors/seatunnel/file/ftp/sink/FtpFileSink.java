@@ -42,6 +42,13 @@ public class FtpFileSink extends BaseFileSink {
 
     @Override
     public void prepare(Config pluginConfig) throws PrepareFailException {
+        /**
+         * FTP 连接配置
+         * host: FTP 主机
+         * port: FTP 端口 (默认 21)
+         * username: 登录 FTP 账号
+         * password: 登录 FTP 密码
+         */
         CheckResult result =
                 CheckConfigUtil.checkAllExists(
                         pluginConfig,
@@ -57,6 +64,13 @@ public class FtpFileSink extends BaseFileSink {
                             getPluginName(), PluginType.SINK, result.getMsg()));
         }
         super.prepare(pluginConfig);
+        /**
+         * 将 FTP 配置封装 HadoopConf
+         * hdfsNameKey -> ftp://{HOST}:{PORT}
+         *
+         * extraOptions { fs.ftp.user.{HOST} -> ${USERNAME}, fs.ftp.password.{HOST} -> {PASSWORD} }
+         *
+         */
         hadoopConf = FtpConf.buildWithConfig(pluginConfig);
     }
 }
